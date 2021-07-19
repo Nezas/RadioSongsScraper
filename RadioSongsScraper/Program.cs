@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using HtmlAgilityPack;
 
-namespace Web_Scraper
+namespace RadioSongsScraper
 {
     class Program
     {
