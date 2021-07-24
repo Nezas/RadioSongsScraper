@@ -12,11 +12,22 @@ namespace RadioSongsScraper
             HtmlDocument doc = web.Load("https://powerhitradio.tv3.lt/top15");
             List<string> songs = new();
 
-            SongList(web, doc, songs);
-            OpenSongs(songs);
+            ShowSongList(web, doc, songs);
+
+            while(true)
+            {
+                int userChoice = GetUserChoice();
+                if(userChoice == 0)
+                {
+                    break;
+                }
+                string searchText = GetSearchText(songs, userChoice);
+                OpenSong(searchText);
+            }
+            Console.WriteLine("Program exited");
         }
 
-        static void SongList(HtmlWeb web, HtmlDocument doc, List<string> songs)
+        static void ShowSongList(HtmlWeb web, HtmlDocument doc, List<string> songs)
         {
             Console.WriteLine("Power Hit Radio TOP 15\n");
 
@@ -32,49 +43,44 @@ namespace RadioSongsScraper
             }
         }
 
-        static void OpenSongs(List<string> songs)
+        static int GetUserChoice()
         {
-            int choice = 0;
-            string searchText;
-            string uri;
-            var psi = new System.Diagnostics.ProcessStartInfo();
-            var process = new System.Diagnostics.Process();
-            psi.UseShellExecute = true;
-
-            do
+            while(true)
             {
                 Console.Write("\nEnter the number of the song you want to listen (0 - exit): ");
                 try
                 {
-                    choice = Convert.ToInt32(Console.ReadLine());
-                    if(choice == 0) break;
-                    searchText = songs[choice - 1];
-                }
-                catch(ArgumentOutOfRangeException) when(choice < 0)
-                {
-                    Console.WriteLine("Choice cannot be negative.");
-                    break;
-                }
-                catch(ArgumentOutOfRangeException) when(choice > 15)
-                {
-                    Console.WriteLine("Choice cannot be greater than 15.");
-                    break;
+                    int userChoice = Convert.ToInt32(Console.ReadLine());
+                    if(userChoice < 0)
+                    {
+                        Console.WriteLine("Choice cannot be negative.");
+                    }
+                    else if(userChoice > 15)
+                    {
+                        Console.WriteLine("Choice cannot be greater than 15.");
+                    }
+                    else return userChoice;
                 }
                 catch(FormatException ex)
                 {
                     Console.WriteLine(ex.Message);
-                    break;
                 }
-                Console.Write("Song was successfully opened!");
+            }
+        }
 
-                searchText = songs[choice - 1];
-                uri = $"https://www.youtube.com/results?search_query={searchText}";
-                psi.FileName = uri;
-                process = System.Diagnostics.Process.Start(psi);
-            } while(choice != 0);
+        static string GetSearchText(List<string> songs, int userChoice)
+        {
+            return songs[userChoice - 1];
+        }
 
-            process.Close();
-            Console.WriteLine("Program exited");
+        static void OpenSong(string searchText)
+        {
+            string uri = $"https://www.youtube.com/results?search_query={searchText}";
+            var psi = new System.Diagnostics.ProcessStartInfo();
+            psi.UseShellExecute = true;
+            psi.FileName = uri;
+            var process = System.Diagnostics.Process.Start(psi);
+            Console.WriteLine("Song was successfully opened!");
         }
     }
 }
