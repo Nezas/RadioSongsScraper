@@ -12,25 +12,25 @@ namespace RadioSongsScraper
             HtmlDocument doc = web.Load("https://powerhitradio.tv3.lt/top15");
             List<string> songs = new();
 
-            ShowSongList(web, doc, songs);
+            GetSongList(web, doc, songs);
+            ShowSongList(songs);
 
-            while(true)
+            int userChoice = GetUserChoice();
+            while(userChoice != 0)
             {
-                int userChoice = GetUserChoice();
-                if(userChoice == 0)
+                if(ValidateUserChoice(userChoice))
                 {
-                    break;
+                    string searchText = GetSearchText(songs, userChoice);
+                    OpenSong(searchText);
                 }
-                string searchText = GetSearchText(songs, userChoice);
-                OpenSong(searchText);
+                userChoice = GetUserChoice();
             }
-            Console.WriteLine("Program exited");
+
+            Console.WriteLine("Program exited.");
         }
 
-        static void ShowSongList(HtmlWeb web, HtmlDocument doc, List<string> songs)
+        static void GetSongList(HtmlWeb web, HtmlDocument doc, List<string> songs)
         {
-            Console.WriteLine("Power Hit Radio TOP 15\n");
-
             for(int i = 1; i <= 15; i++)
             {
                 var songName = doc.DocumentNode.SelectSingleNode($"//*[@id='topb1605831227']/div[2]/div/div/div[{i}]/div[4]/a/p");
@@ -38,8 +38,17 @@ namespace RadioSongsScraper
                 {
                     songName = doc.DocumentNode.SelectSingleNode($"//*[@id='topb1605831227']/div[2]/div/div/div[{i}]/div[3]/a/p");
                 }
-                Console.WriteLine(i + ". " + songName.InnerText);
                 songs.Add(songName.InnerText);
+            }
+        }
+
+        static void ShowSongList(List<string> songs)
+        {
+            Console.WriteLine("Power Hit Radio TOP 15\n");
+
+            for(int i = 0; i < 15; i++)
+            {
+                Console.WriteLine(i + 1 + ". " + songs[i]);
             }
         }
 
@@ -51,21 +60,28 @@ namespace RadioSongsScraper
                 try
                 {
                     int userChoice = Convert.ToInt32(Console.ReadLine());
-                    if(userChoice < 0)
-                    {
-                        Console.WriteLine("Choice cannot be negative.");
-                    }
-                    else if(userChoice > 15)
-                    {
-                        Console.WriteLine("Choice cannot be greater than 15.");
-                    }
-                    else return userChoice;
+                    return userChoice;
                 }
                 catch(FormatException ex)
                 {
                     Console.WriteLine(ex.Message);
                 }
             }
+        }
+
+        static bool ValidateUserChoice(int userChoice)
+        {
+            if(userChoice < 0)
+            {
+                Console.WriteLine("Choice cannot be negative.");
+                return false;
+            }
+            else if(userChoice > 15)
+            {
+                Console.WriteLine("Choice cannot be greater than 15.");
+                return false;
+            }
+            return true;
         }
 
         static string GetSearchText(List<string> songs, int userChoice)
