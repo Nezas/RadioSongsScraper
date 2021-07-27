@@ -4,7 +4,7 @@ using HtmlAgilityPack;
 
 namespace RadioSongsScraper
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
@@ -29,7 +29,7 @@ namespace RadioSongsScraper
             Console.WriteLine("Program exited.");
         }
 
-        static void GetSongList(HtmlWeb web, HtmlDocument doc, List<string> songs)
+        public static void GetSongList(HtmlWeb web, HtmlDocument doc, List<string> songs)
         {
             for(int i = 1; i <= 15; i++)
             {
@@ -42,7 +42,7 @@ namespace RadioSongsScraper
             }
         }
 
-        static void ShowSongList(List<string> songs)
+        public static void ShowSongList(List<string> songs)
         {
             Console.WriteLine("Power Hit Radio TOP 15\n");
 
@@ -52,7 +52,7 @@ namespace RadioSongsScraper
             }
         }
 
-        static int GetUserChoice()
+        public static int GetUserChoice()
         {
             while(true)
             {
@@ -69,7 +69,7 @@ namespace RadioSongsScraper
             }
         }
 
-        static bool ValidateUserChoice(int userChoice)
+        public static bool ValidateUserChoice(int userChoice)
         {
             if(userChoice < 0)
             {
@@ -84,12 +84,12 @@ namespace RadioSongsScraper
             return true;
         }
 
-        static string GetSearchText(List<string> songs, int userChoice)
+        public static string GetSearchText(List<string> songs, int userChoice)
         {
             return songs[userChoice - 1];
         }
 
-        static void OpenSong(string searchText)
+        public static void OpenSong(string searchText)
         {
             string uri = $"https://www.youtube.com/results?search_query={searchText}";
             var psi = new System.Diagnostics.ProcessStartInfo();
