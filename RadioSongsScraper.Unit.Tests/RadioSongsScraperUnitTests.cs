@@ -6,7 +6,7 @@ namespace RadioSongsScraper.Unit.Tests
     public class RadioSongsScraperUnitTests
     {
         [Fact]
-        public void ValidateUserChoice()
+        public void ValidateUserChoice_EnterCorrectNumber_ReturnsTrue()
         {
             bool validation;
 
@@ -16,7 +16,7 @@ namespace RadioSongsScraper.Unit.Tests
         }
 
         [Fact]
-        public void ValidateUserChoice_NegativeNumber()
+        public void ValidateUserChoice_EnterNegativeNumber_ReturnsFalse()
         {
             bool validation;
 
@@ -26,7 +26,7 @@ namespace RadioSongsScraper.Unit.Tests
         }
 
         [Fact]
-        public void ValidateUserChoice_LargerThan15()
+        public void ValidateUserChoice_EnterNumberLargerThan15_ReturnsFalse()
         {
             bool validation;
 
@@ -36,7 +36,7 @@ namespace RadioSongsScraper.Unit.Tests
         }
 
         [Fact]
-        public void GetSearchText()
+        public void GetSearchText_EnterUserChoice_ReturnsCorrectText()
         {
             List<string> songs = new();
             int userChoice = 1;
